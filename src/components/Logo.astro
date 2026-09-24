@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets";
+import icon from "../assets/images/icon.png";
+import { site } from "../data/site";
+---
+
+<span class="logo">
+  <Image src={icon} alt={site.brand} width={40} height={40} />
+  <span class="name">{site.brand}</span>
+</span>
+
+<style>
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mark {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  @media (max-width: 480px) {
+    .name {
+      font-size: 18px;
+      line-height: 1.05;
+    }
+  }
+</style>

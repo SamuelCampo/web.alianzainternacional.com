@@ -1,0 +1,79 @@
+---
+import { money, plan } from '../lib/plan';
+
+// Ejemplo con el mismo producto que el hero.
+const price = 70;
+const cashPrice = 55;
+const weekly = plan(price, 4);
+const biweekly = plan(price, 2);
+---
+
+<section id="planes" class="section section--white">
+  <div class="container stack">
+    <div class="heading center">
+      <span class="eyebrow">Elige cómo pagar</span>
+      <h2 class="h2">Tres formas de llevarte el mismo producto</h2>
+      <p class="lead">Ejemplo con un reloj de USD {price}</p>
+    </div>
+    <div class="grid">
+      <article class="plan">
+        <h3>Semanal</h3>
+        <p class="desc">Cuotas más pequeñas, ideal si cobras cada semana.</p>
+        <div class="amount"><strong>USD {money(weekly.cuotaC)}</strong><span>× 4 cuotas semanales</span></div>
+        <dl>
+          <div><dt>Inicial hoy</dt><dd>USD {money(weekly.iniC)}</dd></div>
+          <div><dt>Total</dt><dd>USD {price}</dd></div>
+        </dl>
+      </article>
+      <article class="plan plan--dark">
+        <span class="badge">Menos pagos</span>
+        <h3>Quincenal</h3>
+        <p class="desc">Solo dos pagos, al ritmo de tu quincena.</p>
+        <div class="amount"><strong>USD {money(biweekly.cuotaC)}</strong><span>× 2 cuotas quincenales</span></div>
+        <dl>
+          <div><dt>Inicial hoy</dt><dd>USD {money(biweekly.iniC)}</dd></div>
+          <div><dt>Total</dt><dd>USD {price}</dd></div>
+        </dl>
+      </article>
+      <article class="plan plan--cash">
+        <h3>Contado</h3>
+        <p class="desc">Pagas una sola vez y te llevas la rebaja del producto.</p>
+        <div class="amount"><strong>USD {cashPrice}</strong><span>pago único</span></div>
+        <dl>
+          <div><dt>Precio a cuotas</dt><dd><s>USD {price}</s></dd></div>
+          <div><dt>Ahorras</dt><dd class="save">USD {price - cashPrice}</dd></div>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack { display: flex; flex-direction: column; gap: clamp(36px, 5vw, 56px); }
+  .center { align-items: center; text-align: center; }
+  .center .h2 { max-width: 760px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .plan { padding: clamp(28px, 3vw, 36px); border-radius: 28px; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 20px; position: relative; }
+  h3 { font-size: 26px; font-weight: 700; }
+  .desc { font-size: 16px; color: var(--ink-2); line-height: 1.5; }
+  .amount { display: flex; flex-direction: column; gap: 4px; }
+  .amount strong { font-family: var(--font-display); font-size: 44px; font-weight: 800; }
+  .amount span { font-size: 15px; color: var(--muted); }
+  dl { margin: 0; display: flex; flex-direction: column; gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 16px; }
+  dl div { display: flex; justify-content: space-between; }
+  dt { color: var(--ink-2); }
+  dd { margin: 0; font-weight: 700; }
+
+  .plan--dark { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .plan--dark .desc, .plan--dark .amount span, .plan--dark dt { color: var(--dark-text); }
+  .plan--dark dl { border-top-color: var(--dark-line); }
+  .badge { position: absolute; top: 28px; right: 28px; padding: 6px 12px; border-radius: 999px; background: var(--accent); font-size: 13px; font-weight: 700; }
+
+  .plan--cash { background: var(--green-soft); }
+  .plan--cash .desc, .plan--cash .amount span, .plan--cash dt { color: var(--green-text); }
+  .plan--cash .amount strong, .plan--cash .save { color: var(--green-ink); }
+  .plan--cash dl { border-top-color: var(--green-line); }
+  .plan--cash s { font-weight: 400; color: var(--green-text); }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; gap: 16px; } }
+</style>

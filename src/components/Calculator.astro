@@ -1,0 +1,200 @@
+---
+import { FREQS, money, plan } from '../lib/plan';
+import { calculatorPrices } from '../data/site';
+
+// Estado inicial renderizado en el servidor; el script de abajo lo actualiza.
+const price = calculatorPrices[0];
+const freq = FREQS[0];
+const p = plan(price, freq.n);
+const schedule = Array.from({ length: freq.n }, (_, i) => ({
+  label: `Cuota ${i + 1}`,
+  when: `${freq.unit} ${i + 1}`,
+  amount: money(i === freq.n - 1 ? p.lastC : p.cuotaC),
+}));
+---
+
+<section id="calculadora" class="section">
+  <div class="container inner" data-calculator data-prices={JSON.stringify(calculatorPrices)}>
+    <div class="controls">
+      <div class="heading">
+        <span class="eyebrow">Calcula tu plan</span>
+        <h2 class="h2">Mira cuánto pagas antes de comprar</h2>
+        <p class="lead">Sin letra pequeña: la inicial siempre es el 45% y el resto se divide en partes iguales.</p>
+      </div>
+      <div class="group" role="group" aria-labelledby="calc-price-label">
+        <span id="calc-price-label" class="label">Precio del producto a cuotas</span>
+        <div class="chips">
+          {calculatorPrices.map((v) => (
+            <button type="button" class="chip" data-price={v} aria-pressed={String(v === price)}>USD {v}</button>
+          ))}
+        </div>
+      </div>
+      <div class="group" role="group" aria-labelledby="calc-freq-label">
+        <span id="calc-freq-label" class="label">¿Cada cuánto quieres pagar?</span>
+        <div class="segmented">
+          {FREQS.map((f) => (
+            <button type="button" class="seg" data-freq={f.id} aria-pressed={String(f.id === freq.id)}>{f.label}</button>
+          ))}
+        </div>
+      </div>
+      <p class="note">Montos referenciales en USD. En la app ves el equivalente en bolívares con la tasa del día.</p>
+    </div>
+
+    <div class="card" aria-live="polite">
+      <div class="totals">
+        <div class="total total--today">
+          <span>Pagas hoy (45%)</span>
+          <strong>USD <span data-out="inicial">{money(p.iniC)}</span></strong>
+        </div>
+        <div class="total">
+          <span>Después (<span data-out="freqWord">{freq.id}</span>)</span>
+          <strong><span data-out="n">{freq.n}</span> × <span data-out="cuota">{money(p.cuotaC)}</span></strong>
+        </div>
+      </div>
+      <div class="split">
+        <div class="bar" aria-hidden="true"><div class="bar-ini"></div><div class="bar-rest"></div></div>
+        <div class="legend"><span>Inicial USD <span data-out="inicial">{money(p.iniC)}</span></span><span>Saldo en cuotas USD <span data-out="saldo">{money(p.saldoC)}</span></span></div>
+      </div>
+      <ul class="schedule">
+        <li>
+          <span class="what"><span class="dot dot--on"></span><strong>Inicial</strong><span class="when">Hoy</span></span>
+          <strong>USD <span data-out="inicial">{money(p.iniC)}</span></strong>
+        </li>
+        <template data-row-template>
+          <li>
+            <span class="what"><span class="dot"></span><strong data-row="label"></strong><span class="when" data-row="when"></span></span>
+            <span>USD <span data-row="amount"></span></span>
+          </li>
+        </template>
+        {schedule.map((c) => (
+          <li data-row-item>
+            <span class="what"><span class="dot"></span><strong data-row="label">{c.label}</strong><span class="when" data-row="when">{c.when}</span></span>
+            <span>USD <span data-row="amount">{c.amount}</span></span>
+          </li>
+        ))}
+        <li class="sum"><strong>Total a cuotas</strong><strong>USD <span data-out="total">{money(p.totalC)}</span></strong></li>
+      </ul>
+      <div class="cash">
+        <span>¿Prefieres pagar todo de una vez? Cada producto tiene un <strong>precio de contado con rebaja</strong>.</span>
+        <a href="#planes">Ver contado</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { FREQS, money, plan, type Freq } from '../lib/plan';
+
+  document.querySelectorAll<HTMLElement>('[data-calculator]').forEach((root) => {
+    const prices: number[] = JSON.parse(root.dataset.prices ?? '[]');
+    const state: { price: number; freq: Freq } = { price: prices[0], freq: FREQS[0].id };
+    const template = root.querySelector<HTMLTemplateElement>('[data-row-template]')!;
+    const sumRow = root.querySelector('.sum')!;
+
+    const setOut = (key: string, value: string) =>
+      root.querySelectorAll(`[data-out="${key}"]`).forEach((el) => (el.textContent = value));
+
+    function render() {
+      const f = FREQS.find((x) => x.id === state.freq)!;
+      const p = plan(state.price, f.n);
+
+      root.querySelectorAll<HTMLButtonElement>('[data-price]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(Number(b.dataset.price) === state.price)),
+      );
+      root.querySelectorAll<HTMLButtonElement>('[data-freq]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.freq === state.freq)),
+      );
+
+      setOut('inicial', money(p.iniC));
+      setOut('saldo', money(p.saldoC));
+      setOut('cuota', money(p.cuotaC));
+      setOut('total', money(p.totalC));
+      setOut('n', String(f.n));
+      setOut('freqWord', f.id);
+
+      root.querySelectorAll('[data-row-item]').forEach((el) => el.remove());
+      for (let i = 1; i <= f.n; i++) {
+        const row = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+        row.dataset.rowItem = '';
+        row.querySelector('[data-row="label"]')!.textContent = `Cuota ${i}`;
+        row.querySelector('[data-row="when"]')!.textContent = `${f.unit} ${i}`;
+        row.querySelector('[data-row="amount"]')!.textContent = money(i === f.n ? p.lastC : p.cuotaC);
+        sumRow.before(row);
+      }
+    }
+
+    root.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+      if (!btn) return;
+      if (btn.dataset.price) state.price = Number(btn.dataset.price);
+      else if (btn.dataset.freq) state.freq = btn.dataset.freq as Freq;
+      else return;
+      render();
+    });
+  });
+</script>
+
+<style>
+  .inner { display: flex; gap: 64px; align-items: stretch; }
+  .controls { width: 470px; flex-shrink: 0; display: flex; flex-direction: column; gap: 32px; }
+  .group { display: flex; flex-direction: column; gap: 12px; }
+  .label { font-size: 15px; font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    height: 52px; padding: 0 22px; border-radius: 14px; font-size: 17px; font-weight: 600;
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink);
+  }
+  .chip[aria-pressed='true'] { font-weight: 700; border: 1.5px solid var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+  .segmented { display: flex; padding: 5px; border-radius: 16px; background: var(--field); }
+  .seg {
+    flex: 1 1 0; height: 50px; border: none; border-radius: 12px; font-size: 17px; font-weight: 600;
+    background: transparent; color: var(--ink-2); padding: 0 8px;
+  }
+  .seg[aria-pressed='true'] { font-weight: 700; background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(14, 26, 43, 0.12); }
+  .note { font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+  .card {
+    flex-grow: 1; min-width: 0; padding: clamp(20px, 3vw, 40px); border-radius: 32px;
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .totals { display: flex; gap: 20px; }
+  .total { flex: 1 1 0; padding: 24px; border-radius: 20px; background: var(--bg); display: flex; flex-direction: column; gap: 6px; }
+  .total > span { font-size: 15px; color: var(--ink-2); font-weight: 500; }
+  .total strong { font-family: var(--font-display); font-size: clamp(34px, 3vw + 12px, 48px); font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
+  .total--today { background: var(--accent); color: #fff; }
+  .total--today > span { color: var(--accent-soft); }
+
+  .split { display: flex; flex-direction: column; gap: 10px; }
+  .bar { display: flex; height: 14px; border-radius: 99px; overflow: hidden; gap: 3px; }
+  .bar-ini { width: 45%; background: var(--accent); }
+  .bar-rest { flex-grow: 1; background: var(--accent-mid); }
+  .legend { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--ink-2); }
+
+  .schedule { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .schedule li { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line-soft); font-size: 16px; }
+  .schedule li.sum { padding: 16px 0 0; border-bottom: none; font-size: 17px; }
+  .what { display: flex; align-items: center; gap: 12px; }
+  .when { color: var(--muted); }
+  .dot { width: 10px; height: 10px; border-radius: 99px; border: 2px solid var(--accent-line); }
+  .dot--on { border: none; background: var(--accent); }
+
+  .cash {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 20px; border-radius: 16px; background: var(--green-soft);
+    font-size: 15px; color: var(--green-ink);
+  }
+  .cash a { font-weight: 700; color: var(--green-ink); white-space: nowrap; }
+
+  @media (max-width: 1080px) {
+    .inner { flex-direction: column; gap: 40px; }
+    .controls { width: 100%; }
+  }
+  @media (max-width: 560px) {
+    .totals { flex-direction: column; gap: 12px; }
+    .seg { font-size: 15px; }
+    .legend { flex-direction: column; gap: 4px; }
+    .cash { flex-direction: column; align-items: flex-start; }
+    .card { border-radius: 24px; }
+  }
+</style>

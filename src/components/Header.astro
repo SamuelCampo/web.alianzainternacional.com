@@ -1,0 +1,36 @@
+---
+import Logo from './Logo.astro';
+import { nav } from '../data/site';
+---
+
+<header class="header">
+  <div class="container inner">
+    <a href="#inicio" class="home" aria-label="Ir al inicio"><Logo /></a>
+    <nav aria-label="Principal">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <a href="#descarga" class="btn btn--primary cta">Quiero la app</a>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .inner { height: 84px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .home { text-decoration: none; color: var(--ink); }
+  nav { display: flex; gap: 36px; font-size: 16px; font-weight: 500; }
+  nav a { color: var(--ink-2); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  .cta { height: 48px; padding: 0 24px; font-size: 16px; }
+
+  @media (max-width: 960px) {
+    nav { display: none; }
+  }
+  @media (max-width: 480px) {
+    .inner { height: 68px; }
+    .cta { height: 42px; padding: 0 18px; font-size: 15px; }
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+import { stores } from '../data/site';
+
+const categories = [
+  { name: 'Tecnología', icon: '<rect x="4" y="5" width="16" height="11" rx="2"></rect><path d="M2 19h20"></path>' },
+  { name: 'Hogar', icon: '<path d="M4 12h16v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M6 12V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path><path d="M6 19v2"></path><path d="M18 19v2"></path>' },
+  { name: 'Moda', icon: '<path d="M8 3l-5 4 3 3 2-1v12h8V9l2 1 3-3-5-4a4 4 0 0 1-8 0z"></path>' },
+];
+---
+
+<section id="tiendas" class="stores">
+  <div class="container stack">
+    <div class="top">
+      <div class="heading">
+        <span class="eyebrow">Qué puedes comprar</span>
+        <h2 class="h2">Tecnología, hogar, moda y más</h2>
+      </div>
+      <a href="#descarga" class="more">Ver catálogo en la app</a>
+    </div>
+
+    <div class="cats">
+      {categories.map((c) => (
+        <div class="cat">
+          <span class="cat-icon">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={c.icon} />
+          </span>
+          <span class="cat-name">{c.name}</span>
+        </div>
+      ))}
+      <a href="#descarga" class="cat cat--all">
+        <span class="cat-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg>
+        </span>
+        <span class="cat-name">Ver todas</span>
+      </a>
+    </div>
+
+    <div class="divider"><span>Tiendas destacadas</span><div></div></div>
+
+    <ul class="store-list">
+      {stores.map((s) => (
+        <li class="store">
+          <span class:list={['badge', `badge--${s.tone}`]} aria-hidden="true">{s.initials}</span>
+          <div><div class="store-name">{s.name}</div><div class="store-tag">{s.tagline}</div></div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .stores { padding-top: clamp(64px, 8vw, 96px); padding-bottom: 48px; }
+  .stack { display: flex; flex-direction: column; gap: 40px; }
+  .top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+  .more { font-size: 17px; font-weight: 600; }
+
+  .cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .cat {
+    height: 120px; padding: 24px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
+    display: flex; align-items: center; gap: 18px; color: var(--ink);
+  }
+  .cat-icon { width: 64px; height: 64px; flex-shrink: 0; border-radius: 999px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; }
+  .cat-name { font-size: 20px; font-weight: 700; }
+  .cat--all { background: var(--accent-soft); border-color: var(--accent-soft); text-decoration: none; color: var(--accent-strong); }
+  .cat--all:hover { color: var(--accent-strong); border-color: var(--accent-line); }
+  .cat--all .cat-icon { background: var(--surface); }
+
+  .divider { display: flex; align-items: center; gap: 20px; }
+  .divider span { font-size: 16px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+  .divider div { height: 1px; flex-grow: 1; background: var(--line); }
+
+  .store-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .store { padding: 20px 24px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: center; gap: 16px; }
+  .badge {
+    width: 56px; height: 56px; flex-shrink: 0; border-radius: 16px;
+    font-family: var(--font-display); font-weight: 800; font-size: 24px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .badge--dark { background: var(--ink); color: #fff; }
+  .badge--green { background: var(--green-soft); color: var(--green-ink); }
+  .badge--blue { background: var(--accent-soft); color: var(--accent-strong); }
+  .store-name { font-size: 18px; font-weight: 700; }
+  .store-tag { font-size: 15px; color: var(--muted); }
+
+  @media (max-width: 1024px) {
+    .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .store-list { grid-template-columns: 1fr; gap: 12px; }
+  }
+  @media (max-width: 560px) {
+    .cats { gap: 12px; }
+    .cat { height: auto; flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+    .cat-icon { width: 52px; height: 52px; }
+    .cat-name { font-size: 18px; }
+  }
+</style>

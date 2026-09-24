@@ -1,0 +1,62 @@
+---
+const stores = [
+  { name: 'App Store', icon: '<rect x="6" y="2" width="12" height="20" rx="3"></rect><path d="M11 18h2"></path>' },
+  { name: 'Google Play', icon: '<path d="M6 3l14 9-14 9z"></path>' },
+];
+---
+
+<section id="descarga" class="section">
+  <div class="container">
+    <div class="box">
+      <svg class="rings" width="420" height="420" viewBox="0 0 420 420" fill="none" aria-hidden="true">
+        <circle cx="210" cy="210" r="120" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="2"></circle>
+        <circle cx="210" cy="210" r="170" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="2"></circle>
+        <circle cx="210" cy="210" r="208" stroke="#FFFFFF" stroke-opacity="0.07" stroke-width="2"></circle>
+      </svg>
+      <div class="copy">
+        <h2>Tu próxima compra empieza con el 45%.</h2>
+        <p>Descarga la app, crea tu cuenta y elige tu plan en minutos.</p>
+      </div>
+      <div class="badges">
+        {stores.map((s) => (
+          <a href="#descarga" class="badge" aria-label={`Próximamente en ${s.name}`}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={s.icon} />
+            <span><small>Próximamente en</small><strong>{s.name}</strong></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .box {
+    padding: clamp(36px, 5vw, 72px); border-radius: clamp(28px, 3vw, 40px);
+    background: var(--accent); color: #fff;
+    display: flex; justify-content: space-between; align-items: center; gap: 48px;
+    position: relative; overflow: hidden;
+  }
+  .rings { position: absolute; right: -80px; top: -120px; }
+  .copy { display: flex; flex-direction: column; gap: 16px; max-width: 640px; position: relative; }
+  h2 { font-size: clamp(2.25rem, 3vw + 1.2rem, 3.75rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 800; }
+  p { font-size: clamp(17px, 0.5vw + 15px, 20px); line-height: 1.5; color: var(--accent-soft); }
+  .badges { display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .badge {
+    width: 260px; height: 64px; padding: 0 22px; border-radius: 16px;
+    background: var(--ink); color: #fff; text-decoration: none;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .badge:hover { color: #fff; background: #000; }
+  .badge span { display: flex; flex-direction: column; }
+  .badge small { font-size: 12px; color: var(--dark-text); }
+  .badge strong { font-size: 18px; font-weight: 700; }
+
+  @media (max-width: 960px) {
+    .box { flex-direction: column; align-items: flex-start; gap: 32px; }
+    .badges { flex-direction: row; flex-wrap: wrap; }
+  }
+  @media (max-width: 560px) {
+    .badges { width: 100%; flex-direction: column; }
+    .badge { width: 100%; }
+  }
+</style>

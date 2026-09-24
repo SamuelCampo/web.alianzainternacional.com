@@ -1,0 +1,56 @@
+---
+import { products } from '../data/site';
+import { money, plan } from '../lib/plan';
+
+const items = products.map((pr) => {
+  const q = plan(pr.price, 4);
+  return { ...pr, cuota: money(q.cuotaC), inicial: money(q.iniC) };
+});
+---
+
+<section class="products">
+  <div class="container stack">
+    <h2 class="title">Productos para ti</h2>
+    <ul class="grid">
+      {items.map((pr) => (
+        <li class="card">
+          <div class="photo">
+            <!-- Reemplazar por <Image /> cuando haya fotos reales -->
+            <span class="ph">Foto: {pr.name}</span>
+            <span class="store">{pr.store}</span>
+          </div>
+          <div class="body">
+            <h3>{pr.name}</h3>
+            <span class="price">Precio a cuotas USD {pr.price}</span>
+            <div class="cuota"><strong>USD {pr.cuota}</strong><span>/ semana</span></div>
+            <span class="ini">Inicial USD {pr.inicial} + 4 cuotas</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .products { padding-top: 48px; padding-bottom: var(--section-y); }
+  .stack { display: flex; flex-direction: column; gap: 32px; }
+  .title { font-size: 28px; font-weight: 700; }
+  .grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .card { border-radius: 24px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; }
+  .photo { height: 220px; background: var(--placeholder); display: flex; align-items: center; justify-content: center; position: relative; }
+  .ph { font-size: 14px; color: var(--muted); font-weight: 500; }
+  .store { position: absolute; top: 14px; left: 14px; padding: 6px 10px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+  .body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  h3 { font-family: var(--font-body); font-size: 17px; font-weight: 700; }
+  .price { font-size: 15px; color: var(--muted); }
+  .cuota { display: flex; align-items: baseline; gap: 6px; padding-top: 8px; }
+  .cuota strong { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--accent-strong); }
+  .cuota span { font-size: 15px; color: var(--ink-2); }
+  .ini { font-size: 14px; color: var(--ink-2); }
+
+  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; gap: 16px; }
+    .photo { height: 180px; }
+  }
+</style>

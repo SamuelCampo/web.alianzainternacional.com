@@ -1,0 +1,122 @@
+---
+import WatchArt from './WatchArt.astro';
+
+const rows = [
+  { label: 'Inicial', when: 'hoy', amount: '31,50', status: 'Aprobada', tone: 'ok' },
+  { label: 'Cuota 1', when: 'semana 1', amount: '9,63', status: 'Próxima', tone: 'next' },
+  { label: 'Cuota 2', when: 'semana 2', amount: '9,63', status: 'Pendiente', tone: 'wait' },
+  { label: 'Cuota 3', when: 'semana 3', amount: '9,63', status: 'Pendiente', tone: 'wait' },
+  { label: 'Cuota 4', when: 'semana 4', amount: '9,61', status: 'Pendiente', tone: 'wait' },
+];
+
+const arrow = '<path d="M2 8h22"></path><path d="M19 3l5 5-5 5"></path>';
+---
+
+<section class="section section--white">
+  <div class="container inner">
+    <div class="copy">
+      <div class="heading">
+        <span class="eyebrow">Pagos claros</span>
+        <h2 class="h2">Sabes en qué va cada pago</h2>
+        <p class="lead">Reportas tu pago con el comprobante y lo sigues desde la app hasta que se aprueba.</p>
+      </div>
+      <ol class="flow">
+        <li class="step"><span>Paso 1</span><strong>Reportado</strong></li>
+        <li class="arrow" aria-hidden="true"><svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="var(--accent-line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrow} /></li>
+        <li class="step step--review"><span>Paso 2</span><strong>En revisión</strong></li>
+        <li class="arrow" aria-hidden="true"><svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="var(--accent-line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrow} /></li>
+        <li class="step step--ok"><span>Paso 3</span><strong>Aprobado</strong></li>
+      </ol>
+      <div class="facts">
+        <div><strong>Pago Móvil o transferencia</strong><span>Usa siempre los datos que te muestra la app.</span></div>
+        <div><strong>Precios en USD, pagas en Bs.</strong><span>La tasa del día queda guardada en cada pago.</span></div>
+      </div>
+    </div>
+
+    <div class="order" aria-label="Ejemplo de pedido en la app">
+      <div class="head">
+        <div class="thumb"><WatchArt width={40} height={54} hands={false} /></div>
+        <div class="head-text">
+          <span class="meta">Tech Haven · Pedido #RA-2048</span>
+          <strong>Reloj de mano</strong>
+          <span class="tag tag--ok">Inicial aprobada</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div><span>Total</span><strong>USD 70,00</strong></div>
+        <div><span>Pagado</span><strong class="paid">USD 31,50</strong></div>
+        <div><span>Pendiente</span><strong>USD 38,50</strong></div>
+      </div>
+      <div class="progress"><div></div></div>
+      <ul class="rows">
+        {rows.map((r) => (
+          <li>
+            <span><strong>{r.label}</strong> <span class="when">· {r.when}</span></span>
+            <span class="right">USD {r.amount}<span class:list={['tag', `tag--${r.tone}`]}>{r.status}</span></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .inner { display: flex; gap: 72px; align-items: center; }
+  .copy { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 32px; }
+
+  .flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .step { padding: 14px 18px; border-radius: 16px; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+  .step span { font-size: 13px; color: var(--muted); }
+  .step strong { font-size: 16px; }
+  .step--review { border-color: var(--amber-soft); background: var(--amber-soft); }
+  .step--review span, .step--review strong { color: var(--amber-ink); }
+  .step--ok { border-color: var(--green-soft); background: var(--green-soft); }
+  .step--ok span, .step--ok strong { color: var(--green-ink); }
+  .arrow { display: flex; }
+
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .facts > div { padding: 20px; border-radius: 18px; background: var(--bg); display: flex; flex-direction: column; gap: 8px; }
+  .facts strong { font-size: 17px; }
+  .facts span { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+
+  .order {
+    width: 500px; flex-shrink: 0; padding: 28px; border-radius: 32px;
+    background: var(--bg); border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .head { display: flex; gap: 16px; align-items: center; padding: 16px; border-radius: 20px; background: var(--surface); }
+  .thumb { width: 72px; height: 72px; flex-shrink: 0; border-radius: 14px; background: var(--placeholder); display: flex; align-items: center; justify-content: center; }
+  .head-text { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; }
+  .meta { font-size: 13px; color: var(--muted); }
+  .head-text strong { font-size: 18px; }
+  .head-text .tag { align-self: flex-start; padding: 4px 10px; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stats span { display: block; font-size: 13px; color: var(--muted); }
+  .stats strong { display: block; font-size: 18px; font-weight: 700; }
+  .stats .paid { color: var(--green); }
+  .progress { height: 10px; border-radius: 99px; background: var(--line); }
+  .progress div { width: 45%; height: 10px; border-radius: 99px; background: var(--green); }
+
+  .rows { list-style: none; margin: 0; padding: 8px 18px; border-radius: 20px; background: var(--surface); display: flex; flex-direction: column; }
+  .rows li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px; }
+  .rows li:last-child { border-bottom: none; }
+  .when { color: var(--muted); }
+  .right { display: flex; gap: 10px; align-items: center; white-space: nowrap; }
+
+  .tag { padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+  .tag--ok { background: var(--green-soft); color: var(--green-ink); }
+  .tag--next { background: var(--accent-soft); color: var(--accent-strong); }
+  .tag--wait { background: var(--line-soft); color: var(--ink-2); }
+
+  @media (max-width: 1100px) {
+    .inner { flex-direction: column; align-items: stretch; gap: 48px; }
+    .order { width: 100%; max-width: 560px; align-self: center; }
+  }
+  @media (max-width: 560px) {
+    .facts { grid-template-columns: 1fr; }
+    .order { padding: 16px; border-radius: 24px; }
+    .rows { padding: 4px 14px; }
+    .rows li { font-size: 14px; }
+    .stats strong { font-size: 16px; }
+  }
+</style>

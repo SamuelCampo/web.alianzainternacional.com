@@ -1,0 +1,153 @@
+---
+import Check from './Check.astro';
+import WatchArt from './WatchArt.astro';
+---
+
+<section id="inicio" class="hero">
+  <div class="container inner">
+    <div class="copy">
+      <span class="pill">Compra hoy, paga a tu ritmo</span>
+      <h1>Llévatelo hoy con solo el <span class="accent">45%</span> de inicial.</h1>
+      <p class="sub">Paga el resto en 4 cuotas semanales o 2 quincenales. La misma inicial para todos, desde tu primera compra.</p>
+      <div class="actions">
+        <a href="#descarga" class="btn btn--primary big">
+          Quiero comprar a cuotas
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="#calculadora" class="btn btn--ghost big">Calcula tu plan</a>
+      </div>
+      <ul class="trust">
+        <li><Check />Sin cargos ocultos</li>
+        <li><Check />Pago Móvil o transferencia</li>
+        <li><Check />Precio de contado con rebaja</li>
+      </ul>
+    </div>
+
+    <div class="visual-wrap" aria-hidden="true">
+      <div class="visual">
+        <div class="backdrop"></div>
+        <svg class="rings" width="520" height="600" viewBox="0 0 520 600" fill="none">
+          <circle cx="460" cy="80" r="130" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="2"></circle>
+          <circle cx="460" cy="80" r="190" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="2"></circle>
+          <circle cx="460" cy="80" r="250" stroke="#FFFFFF" stroke-opacity="0.07" stroke-width="2"></circle>
+        </svg>
+
+        <div class="phone">
+          <div class="screen">
+            <div class="bar">Detalle del producto</div>
+            <div class="photo"><WatchArt /></div>
+            <div class="body">
+              <div class="seller">Vendido por Tech Haven</div>
+              <div class="pname">Reloj de mano</div>
+              <div class="price"><span>Precio a cuotas</span><strong>USD 70</strong></div>
+              <div class="options">
+                <div class="opt opt--on"><b>En cuotas</b><span>45% hoy</span></div>
+                <div class="opt"><b>De contado</b><span>USD 55</span></div>
+              </div>
+              <div class="seg"><div class="seg-on">Semanal</div><div>Quincenal</div></div>
+              <div class="summary">
+                <div><small>Pagas hoy</small><strong class="today">USD 31,50</strong></div>
+                <div class="right"><small>Después</small><strong>4 cuotas de 9,63</strong></div>
+              </div>
+            </div>
+            <div class="foot"><div class="continue">Continuar compra</div></div>
+          </div>
+        </div>
+
+        <div class="float float--approved">
+          <span class="ok"><Check size={20} strokeWidth={2.6} /></span>
+          <div><b>Inicial aprobada</b><span>Tu pedido va en camino</span></div>
+        </div>
+        <div class="float float--progress">
+          <div class="label">1 de 4 cuotas pagadas</div>
+          <div class="track"><div></div></div>
+          <div class="next"><span>Próxima:</span> <strong>USD 9,63</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(40px, 6vw, 72px) clamp(56px, 7vw, 88px); }
+  .inner { display: flex; align-items: center; gap: 64px; }
+  .copy { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+  .pill {
+    align-self: flex-start; padding: 8px 14px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent-strong); font-size: 14px; font-weight: 600;
+  }
+  h1 {
+    font-size: clamp(2.75rem, 4.2vw + 1rem, 4.5rem);
+    line-height: 1.02; letter-spacing: -0.035em; font-weight: 800;
+  }
+  .accent { color: var(--accent); }
+  .sub { font-size: clamp(18px, 1vw + 12px, 21px); line-height: 1.5; color: var(--ink-2); max-width: 540px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .big { height: 58px; padding: 0 30px; font-size: 18px; }
+  .trust {
+    list-style: none; margin: 0; padding: 12px 0 0;
+    display: flex; flex-wrap: wrap; gap: 12px 28px;
+    border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-2);
+  }
+  .trust li { display: flex; align-items: center; gap: 8px; }
+
+  /* Composición fija de 560×660 que se escala en pantallas pequeñas. */
+  .visual-wrap { flex-shrink: 0; }
+  .visual { width: 560px; height: 660px; position: relative; }
+  .backdrop { position: absolute; left: 40px; top: 30px; width: 520px; height: 600px; border-radius: 40px; background: var(--accent); }
+  .rings { position: absolute; left: 40px; top: 30px; }
+  .phone {
+    position: absolute; left: 150px; top: 0; width: 300px; height: 620px;
+    border-radius: 44px; background: var(--ink); padding: 10px;
+    box-shadow: 0 30px 60px rgba(14, 26, 43, 0.28);
+  }
+  .screen { width: 100%; height: 100%; border-radius: 35px; background: #fff; overflow: hidden; display: flex; flex-direction: column; }
+  .bar { height: 46px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--line-soft); }
+  .photo { height: 170px; background: #F1F4F8; display: flex; align-items: center; justify-content: center; }
+  .body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .seller { font-size: 11px; color: var(--muted); }
+  .pname { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-top: -6px; }
+  .price { display: flex; align-items: baseline; gap: 8px; }
+  .price span { font-size: 11px; color: var(--muted); }
+  .price strong { font-size: 17px; color: var(--accent-strong); }
+  .options { display: flex; gap: 8px; }
+  .opt { flex: 1 1 0; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 11px; display: flex; flex-direction: column; }
+  .opt span { color: var(--ink-2); }
+  .opt--on { border: 1.5px solid var(--accent); background: var(--accent-soft); }
+  .seg { display: flex; background: #F1F4F8; border-radius: 8px; padding: 3px; font-size: 11px; font-weight: 600; }
+  .seg > div { flex-grow: 1; text-align: center; padding: 6px; color: var(--muted); }
+  .seg > .seg-on { background: #fff; color: var(--ink); border-radius: 6px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+  .summary { display: flex; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+  .summary small { display: block; font-size: 10px; color: var(--muted); }
+  .summary strong { display: block; font-size: 14px; }
+  .summary .today { font-size: 18px; font-weight: 800; color: var(--accent-strong); }
+  .summary .right { text-align: right; }
+  .foot { margin-top: auto; padding: 12px 16px 18px; border-top: 1px solid var(--line-soft); }
+  .continue { height: 40px; border-radius: 10px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+  .float { position: absolute; border-radius: 18px; background: #fff; box-shadow: var(--shadow-float); }
+  .float--approved { left: 0; top: 430px; width: 236px; padding: 16px; display: flex; gap: 12px; align-items: center; }
+  .float--approved b { display: block; font-size: 14px; }
+  .float--approved span:not(.ok) { display: block; font-size: 13px; color: var(--ink-2); }
+  .ok { width: 40px; height: 40px; flex-shrink: 0; border-radius: 999px; background: var(--green-soft); display: flex; align-items: center; justify-content: center; }
+  .float--progress { right: -16px; top: 150px; width: 200px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .track { height: 8px; border-radius: 99px; background: var(--accent-soft); }
+  .track > div { width: 25%; height: 8px; border-radius: 99px; background: var(--accent); }
+  .next { font-size: 13px; }
+  .next span { color: var(--ink-2); }
+
+  @media (max-width: 1180px) {
+    .inner { flex-direction: column; align-items: stretch; gap: 48px; }
+    .visual-wrap { align-self: center; }
+  }
+  @media (max-width: 640px) {
+    .visual-wrap { width: 336px; height: 396px; }
+    .visual { transform: scale(0.6); transform-origin: top left; }
+    .big { flex: 1 1 100%; }
+  }
+  @media (max-width: 380px) {
+    .visual-wrap { width: 302px; height: 356px; }
+    .visual { transform: scale(0.54); }
+  }
+</style>

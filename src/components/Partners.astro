@@ -1,0 +1,86 @@
+---
+import Check from './Check.astro';
+import { site } from '../data/site';
+
+const perks = [
+  'Tus productos visibles en la app',
+  'Nosotros gestionamos pagos y cuotas',
+  'Te acompañamos en la carga del catálogo',
+];
+---
+
+<section id="aliados" class="section">
+  <div class="container inner">
+    <div class="copy">
+      <span class="eyebrow">¿Tienes una tienda?</span>
+      <h2 class="h2">Vende a cuotas a nuevos clientes</h2>
+      <p class="lead">Muestra tus productos a compradores que prefieren pagar por partes. Déjanos tus datos y nuestro equipo te contacta para sumarte al catálogo.</p>
+      <ul class="perks">
+        {perks.map((perk) => <li><Check size={20} />{perk}</li>)}
+      </ul>
+    </div>
+
+    <form class="form" method="post" action={site.partnerFormAction || undefined} data-partner-form>
+      <h3>Quiero vender a cuotas</h3>
+      <label>Tu nombre<input type="text" name="nombre" placeholder="Nombre y apellido" autocomplete="name" required /></label>
+      <label>Nombre del negocio<input type="text" name="negocio" placeholder="Ej. Casa Viva" autocomplete="organization" required /></label>
+      <div class="row">
+        <label>Teléfono (WhatsApp)<input type="tel" name="telefono" placeholder="+58 412 000 0000" autocomplete="tel" required /></label>
+        <label>Categoría
+          <select name="categoria">
+            <option>Tecnología</option>
+            <option>Hogar</option>
+            <option>Moda</option>
+            <option>Otra</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit" class="btn btn--primary submit">Enviar mis datos</button>
+      <p class="status" role="status" hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Mientras no haya endpoint configurado (site.partnerFormAction), no se envía nada.
+  document.querySelectorAll<HTMLFormElement>('[data-partner-form]').forEach((form) => {
+    if (form.getAttribute('action')) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>('.status')!;
+      status.textContent = 'El formulario aún no está conectado. Configura partnerFormAction en src/data/site.ts.';
+      status.hidden = false;
+    });
+  });
+</script>
+
+<style>
+  .inner { display: flex; gap: 72px; align-items: center; }
+  .copy { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .lead { line-height: 1.55; max-width: 500px; }
+  .perks { list-style: none; margin: 0; padding: 8px 0 0; display: flex; flex-direction: column; gap: 12px; font-size: 17px; }
+  .perks li { display: flex; gap: 12px; align-items: center; }
+
+  .form {
+    width: 520px; flex-shrink: 0; padding: clamp(24px, 3vw, 36px); border-radius: 28px;
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-card);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  h3 { margin-bottom: 4px; font-size: 24px; font-weight: 700; }
+  label { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 600; }
+  input, select {
+    height: 50px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--line-strong);
+    font-size: 16px; background: var(--surface); color: var(--ink); width: 100%;
+  }
+  select { padding: 0 12px; }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+  .row { display: flex; gap: 14px; }
+  .submit { height: 54px; margin-top: 6px; font-size: 17px; }
+  .status { font-size: 14px; color: var(--amber-ink); background: var(--amber-soft); padding: 10px 14px; border-radius: 10px; }
+
+  @media (max-width: 1080px) {
+    .inner { flex-direction: column; align-items: stretch; gap: 40px; }
+    .form { width: 100%; max-width: 600px; }
+  }
+  @media (max-width: 520px) { .row { flex-direction: column; gap: 18px; } }
+</style>

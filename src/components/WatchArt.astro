@@ -1,0 +1,13 @@
+---
+interface Props { width?: number; height?: number; hands?: boolean }
+const { width = 104, height = 140, hands = true } = Astro.props;
+---
+
+<svg width={width} height={height} viewBox="0 0 104 140" fill="none" aria-hidden="true">
+  <rect x="30" y="0" width="44" height="34" rx="8" fill="#26344A"></rect>
+  <rect x="30" y="106" width="44" height="34" rx="8" fill="#26344A"></rect>
+  <circle cx="52" cy="70" r="40" fill="#1B2638"></circle>
+  <circle cx="52" cy="70" r="31" fill="#2F3F58"></circle>
+  {hands && <path d="M52 50v20l12 8" stroke="#E7EFFC" stroke-width="3" stroke-linecap="round"></path>}
+  {hands && <rect x="92" y="64" width="7" height="12" rx="2" fill="#26344A"></rect>}
+</svg>

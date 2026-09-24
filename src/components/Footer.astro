@@ -1,0 +1,145 @@
+---
+import Logo from "./Logo.astro";
+import { site, whatsappUrl } from "../data/site";
+
+const columns = [
+  {
+    title: "Producto",
+    links: [
+      { href: "#como-funciona", label: "Cómo funciona" },
+      { href: "#calculadora", label: "Calcula tu plan" },
+      { href: "#tiendas", label: "Tiendas" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { href: "#terminos", label: "Términos y condiciones" },
+      { href: "#privacidad", label: "Política de privacidad" },
+      { href: "#credito", label: "Políticas de crédito y cobro" },
+    ],
+  },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container stack">
+    <div class="top">
+      <div class="about">
+        <span class="brand"><Logo /></span>
+        <p>
+          Compra hoy con 45% de inicial y paga el resto en cuotas semanales o
+          quincenales.
+        </p>
+      </div>
+      <div class="cols">
+        {
+          columns.map((col) => (
+            <nav aria-label={col.title} class="col">
+              <strong>{col.title}</strong>
+              {col.links.map((l) => (
+                <a href={l.href}>{l.label}</a>
+              ))}
+            </nav>
+          ))
+        }
+        <div class="col">
+          <strong>Contacto</strong>
+          <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          <a href={whatsappUrl} target="_blank" rel="noopener"
+            >{site.contact.whatsapp}</a
+          >
+          <address>{site.address}</address>
+        </div>
+      </div>
+    </div>
+    <div class="bottom">
+      <span
+        >© {year}
+        {site.legalName} · RIF {site.rif}. Todos los derechos reservados.</span
+      >
+      <span>Nunca te pediremos pagos fuera de la app.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: 64px 48px;
+    background: var(--ink);
+    color: var(--dark-text);
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+  }
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 360px;
+  }
+  .brand {
+    color: #fff;
+  }
+  .about p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .cols {
+    display: flex;
+    gap: 72px;
+    font-size: 15px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .col strong {
+    color: #fff;
+    font-size: 16px;
+  }
+  .col a {
+    color: var(--dark-text);
+    text-decoration: none;
+  }
+  .col a:hover {
+    color: #fff;
+  }
+  address {
+    font-style: normal;
+    line-height: 1.5;
+    max-width: 260px;
+  }
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid #22324b;
+    font-size: 14px;
+  }
+
+  @media (max-width: 1024px) {
+    .top {
+      flex-direction: column;
+    }
+    .cols {
+      flex-wrap: wrap;
+      gap: 32px 56px;
+    }
+  }
+  @media (max-width: 640px) {
+    .bottom {
+      flex-direction: column;
+    }
+  }
+</style>
